@@ -1,0 +1,23 @@
+# ─── Environment Variables ───
+# Dejo comentado esta linea para simplificar la asignación de las variables de entorno
+# .env
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ─── Tests ───
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ─── IDE ───
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── OS ───
+.DS_Store
+Thumbs.db
