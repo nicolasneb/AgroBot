@@ -166,6 +166,9 @@ make init
 
 # 3. Abrir la documentación interactiva
 # http://localhost:8000/docs
+
+# 4. Ver logs donde podremos observar las notificaciones (por default se ejecuta el job cada 60s)
+make logs
 ```
 
 La API estará disponible en `http://localhost:8000` y la documentación Swagger en `http://localhost:8000/docs`.
@@ -174,6 +177,7 @@ La API estará disponible en `http://localhost:8000` y la documentación Swagger
 
 > **Nota:** Si el build falla con un error de snapshot (`parent snapshot does not exist`),
 > ejecutar `docker builder prune -f` y reintentar con `make init`.
+> Esta aclaracion esta hecha debido a que me encontre con dicho problema una vez a lo largo del desarrollo
 
 ### Comandos disponibles
 
@@ -253,6 +257,7 @@ make test
 make test-cov
 ```
 
+
 Los tests cubren:
 
 - **Repositories**: CRUD de cada entidad contra la base de datos de test
@@ -262,6 +267,47 @@ Los tests cubren:
 - **Handlers**: Acumulación y flush de notificaciones
 - **Background Job**: Ejecución periódica del servicio de evaluación
 - **Seed**: Idempotencia de la carga de datos
+
+---
+
+### Variables de Entorno
+
+El archivo `.env` en la raíz del proyecto configura todo el sistema. A continuación el detalle de cada variable:
+
+> **Nota:** Deje subido el .env para este challenge ya que facilita levantar el entorno rápidamente soy consciente de que no es una buena practica dejarlo, esta comentada la linea referida el .env en el .gitignore
+
+#### PostgreSQL
+
+| Variable | Descripción | Default |
+|---|---|---|
+| `POSTGRES_USER` | Usuario de la base de datos | `postgres` |
+| `POSTGRES_PASSWORD` | Contraseña de la base de datos | `postgres` |
+| `POSTGRES_DB` | Nombre de la base de datos | `agrobot` |
+| `POSTGRES_PORT` | Puerto de PostgreSQL | `5432` |
+
+#### Application
+
+| Variable | Descripción | Default |
+|---|---|---|
+| `DATABASE_URL` | Connection string async para SQLAlchemy (`asyncpg`) | Compuesta desde las variables de PostgreSQL |
+| `TEST_DATABASE_URL` | Connection string async para la base de datos de tests | `""` (vacío) |
+| `ALEMBIC_DATABASE_URL` | Connection string sync para Alembic (`psycopg2`) | `""` (vacío) |
+
+#### Background Job
+
+| Variable | Descripción | Default |
+|---|---|---|
+| `EVALUATION_INTERVAL_SECONDS` | Intervalo en segundos entre cada ejecución del job de evaluación de alertas | `60` |
+
+> **Nota:** Las variables `DATABASE_URL`, `TEST_DATABASE_URL` y `ALEMBIC_DATABASE_URL` se componen dinámicamente usando interpolación de variables en el `.env`. No es necesario modificarlas directamente, basta con ajustar las variables de PostgreSQL.
+>
+> Se usan dos drivers distintos porque SQLAlchemy async requiere `asyncpg` mientras que Alembic opera de forma sincrónica con `psycopg2`.
+
+---
+
+### cURL Examples
+
+El archivo `curls.sh` contiene todos los comandos para probar la API.
 
 ---
 
