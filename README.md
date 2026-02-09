@@ -253,7 +253,7 @@ La API estará disponible en `http://localhost:8000` y la documentación Swagger
 # Ejecutar todos los tests
 make test
 
-# Tests con reporte de cobertura
+# Tests con reporte de cobertura (actualmente el proyecto cuenta con un 93% de cobertura)
 make test-cov
 ```
 
